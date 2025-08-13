@@ -23,7 +23,7 @@ This is a **stdio-based MCP server** that provides LLMs with the ability to quer
 
 ## Installation
 
-1. **Download or compile the executable** (`wmi-mcp.exe`)
+1. **Download from releases or compile the executable** (`wmi-mcp.exe`)
 2. **Place the executable** in a directory of your choice (e.g., `C:\Users\YourName\wmi-mcp\`)
 3. **Configure your LLM agent** to use this MCP server
 
@@ -75,9 +75,9 @@ Add to your `claude_desktop_config.json`:
 
 Configure as a stdio server pointing to the executable path.
 
-## Usage Examples
+## Few Examples
 
-Once configured, you can ask your LLM to perform various system queries:
+Once configured, the LLM can be instructed to perform various system queries. The LLM will then generate the corresponding WMI query and transmit it to this MCP server for execution.
 
 ### System Information
 ```
