@@ -162,8 +162,7 @@ Structured JSON with:
 
 ## Security Notes
 
-- Some queries may require administrator privileges
-- The server runs with the permissions of the user executing it
+- The server will not start if executed with administrative privileges, as a safety measure.
 - Consider the security implications of allowing LLMs to query system information
 
 ## Contributing

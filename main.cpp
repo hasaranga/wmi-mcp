@@ -1,3 +1,7 @@
+
+// Author: R.Hasaranga <https://www.hasaranga.com>
+// License: MIT
+
 #include <iostream>
 #include <stdio.h>
 #include <Windows.h>
@@ -226,9 +230,34 @@ public:
             initialized = false;
         }
     }
+
+    static bool isProcessElevated() {
+        HANDLE token = NULL;
+        if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &token)) {
+            return false;
+        }
+
+        TOKEN_ELEVATION elevation;
+        DWORD size = sizeof(TOKEN_ELEVATION);
+
+        bool isElevated = false;
+        if (GetTokenInformation(token, TokenElevation, &elevation, sizeof(elevation), &size)) {
+            isElevated = elevation.TokenIsElevated != 0;
+        }
+
+        CloseHandle(token);
+        return isElevated;
+    }
 };
 
-int main() {
+int main(){
+
+    // safety measure
+    if (WMIQueryExecutor::isProcessElevated()){
+        std::cerr << "Error: This server cannot run with elevated privileges." << std::endl;
+        return 1;
+    }
+
     // Initialize WMI
     WMIQueryExecutor wmi;
     if (!wmi.initialize()) {
@@ -243,10 +272,23 @@ int main() {
 
         try {
             json request = json::parse(line);
+
+            // Check if this is a notification (no id field)
+            if (!request.contains("id")) {
+                // This is a notification - handle silently and continue
+                std::string method = request.value("method", "");
+                if (method == "notifications/initialized") {
+                    // Client has initialized - we can just continue
+                    continue;
+                }
+                // For other notifications, we can log them but don't need to respond
+                continue;
+            }
+
             json response;
 
             // Extract ID and method
-            auto id = request.contains("id") ? request["id"] : nullptr;
+            auto id = request["id"];
             std::string method = request.value("method", "");
 
             response["jsonrpc"] = "2.0";
@@ -267,18 +309,18 @@ int main() {
                     {"tools", json::array({
                         {
                             {"name", "executeWMIQuery"},
-                            {"description", "Executes WMI (Windows Management Instrumentation) queries to retrieve system information from Windows computers. This tool can query hardware details, running processes, services, system configuration, network information, disk usage, and much more. Common namespaces include ROOT\\CIMV2 (most common system info), ROOT\\WMI (hardware sensors), and ROOT\\RSOP (policy info). Use WQL (WMI Query Language) syntax similar to SQL."},
+                            {"description", "Executes WMI queries to retrieve system info. (hardware,process,network,disk etc...)"},
                             {"inputSchema", {
                                 {"type", "object"},
                                 {"properties", {
                                     {"namespace", {
                                         {"type", "string"},
-                                        {"description", "WMI namespace to query (e.g., ROOT\\CIMV2, ROOT\\WMI)"},
+                                        {"description", "WMI namespace to query (e.g., ROOT\\CIMV2, ROOT\\WMI, ROOT\\RSOP)"},
                                         {"default", "ROOT\\CIMV2"}
                                     }},
                                     {"query", {
                                         {"type", "string"},
-                                        {"description", "WQL query to execute (e.g., SELECT ExecutablePath FROM Win32_Process, SELECT Name, Size FROM Win32_LogicalDisk)"}
+                                        {"description", "WQL query to execute (e.g., SELECT ExecutablePath FROM Win32_Process)"}
                                     }}
                                 }},
                                 {"required", json::array({"query"})}
