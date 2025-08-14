@@ -39,7 +39,7 @@ g++ -std=c++11 main.cpp -lole32 -loleaut32 -lwbemuuid -o wmi-mcp.exe
 
 ## Configuration
 
-### For Gemini/Google AI Studio
+### For Gemini CLI
 
 Add the following to your MCP configuration:
 
@@ -75,43 +75,32 @@ Add to your `claude_desktop_config.json`:
 
 Configure as a stdio server pointing to the executable path.
 
-## Few Examples
+## Ask Questions About Your System
 
-Once configured, the LLM can be instructed to perform various system queries. The LLM will then generate the corresponding WMI query and transmit it to this MCP server for execution.
+Once set up, you can simply ask the LLM questions like "Why is my computer running hot?" or "Is my hard drive failing?". The LLM will translate your question into the necessary WMI queries and send them to this MCP server for execution.
 
-### System Information
-```
-"Get basic system information including computer name, OS version, and total memory"
-```
+### Few Examples
 
-### Process Monitoring
 ```
-"Show me all running processes with their memory usage"
-```
-
-### Disk Usage
-```
-"Check disk space on all drives"
-```
-
-### Network Configuration
-```
-"List all network adapters and their IP addresses"
-```
-
-### Service Status
-```
-"Show me all Windows services that are currently stopped"
-```
-
-### Hardware Information
-```
-"Get CPU information including cores and clock speed"
-```
-
-### Event Logs
-```
-"Check recent system errors from the event log"
+Why does my PC boot slow?
+Why is my computer running hot?
+Why is my internet slow?
+Why is my battery draining so fast?
+Why is my game lagging?
+Were there failed or unexpected login attempts?
+Is my hard drive failing?
+Is there any suspicious process on my PC?
+Can my PC run this game/software?
+Which programs start with Windows?
+What processes are using my network right now?
+Is my antivirus active and up to date?
+When was the last time my system updated?
+Are critical Windows services disabled or tampered with?
+Has new software installed recently?
+Are there suspicious scheduled tasks?
+Are my firewall and antivirus still active?
+Which programs connected to suspicious IP addresses?
+Are there suspicious startup programs?
 ```
 
 ## Tool Parameters
