@@ -161,3 +161,13 @@ Feel free to submit issues, feature requests, or pull requests to improve this M
 ## Author
 
 R.Hasaranga (https://www.hasaranga.com)
+
+## Privacy Policy
+
+This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it.
+
+## Code Signing Policy
+
+Free code signing provided by SignPath.io, certificate by SignPath Foundation.
+
+
